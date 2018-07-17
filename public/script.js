@@ -2,9 +2,10 @@ new Vue({
   el: '#app',
   data: {
     total: 0,
+    results: [],
     items: [],
     cart: [],
-    search: '',
+    search: 'code',
     lastSearch: '',
     loading: false,
     hasSearched: false,
@@ -22,7 +23,8 @@ new Vue({
             var change = parseFloat(Math.random().toFixed(2));
             items[i].price = price + change;
           }
-          this.items = res.body;
+          this.results = items;
+          this.items = items.slice(0, 10);
           this.loading = false;
         });
     },
@@ -75,5 +77,8 @@ new Vue({
     currency: function(price) {
       return `$${price.toFixed(2)}`;
     }
+  },
+  mounted() {
+    this.onSubmit();
   }
 });
