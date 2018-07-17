@@ -2,14 +2,30 @@ new Vue({
   el: '#app',
   data: {
     total: 0,
-    items: [
-      {id: 1, title: 'Item One', price: 9.99},
-      {id: 2, title: 'Item Two', price: 7.99},
-      {id: 3, title: 'Item Three', price: 12.99},
-    ],
+    items: [],
     cart: [],
+    search: '',
+    lastSearch: '',
+    loading: false,
+    hasSearched: false,
   },
   methods: {
+    onSubmit() {
+      this.loading = true;
+      this.hasSearched = true;
+      this.$http.get('/search/'.concat(this.search))
+        .then(function(res) {
+          this.lastSearch = this.search;
+          var items = res.body;
+          for(var i = 0; i < items.length; i++) {
+            var price = 3 + Math.floor(Math.random() * 12);
+            var change = parseFloat(Math.random().toFixed(2));
+            items[i].price = price + change;
+          }
+          this.items = res.body;
+          this.loading = false;
+        });
+    },
     addItem(idx) {
       var item = this.items[idx];
       var found = false;
@@ -17,6 +33,7 @@ new Vue({
         if(this.cart[i].id === item.id) {
           this.cart[i].qty++;
           found = true;
+          break;
         }
       }
       if(!found) {
