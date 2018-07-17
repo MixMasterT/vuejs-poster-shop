@@ -28,7 +28,7 @@
             fetching results...
           </div>
           <div class="search-results" v-else-if="hasSearched">
-            Found {{ items.length }} results for '{{ lastSearch }}'
+            Found {{ results.length }} results for '{{ lastSearch }}'
           </div>
           <div class="product" v-for="(item, index) in items">
             <div>
@@ -42,7 +42,9 @@
               <button class="add-to-cart btn" v-on:click="addItem(index)">Add to cart</button>
             </div>
           </div>
-          <div id="product-list-bottom"></div>
+          <div id="product-list-bottom">
+            <div v-if="hasSearched && items.length === results.length">No More Items.</div>
+          </div>
         </div>
         <div class="cart">
             <h2>Shopping Cart</h2>

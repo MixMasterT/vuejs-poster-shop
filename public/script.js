@@ -1,3 +1,5 @@
+var LOAD_NUM = 10;
+
 new Vue({
   el: '#app',
   data: {
@@ -11,6 +13,13 @@ new Vue({
     hasSearched: false,
   },
   methods: {
+    appendItems() {
+      if(this.items.length < this.results.length) { // more items to load...
+          var append = this.results.slice(this.items.length, this.items.length + LOAD_NUM);
+          this.items = this.items.concat(append);
+      }
+      console.log('appending...');
+    },
     onSubmit() {
       this.loading = true;
       this.hasSearched = true;
@@ -80,5 +89,11 @@ new Vue({
   },
   mounted() {
     this.onSubmit();
+    var vueInstance = this;
+    var elem = document.getElementById('product-list-bottom');
+    var watcher = scrollMonitor.create(elem);
+    watcher.enterViewport(function() {
+      vueInstance.appendItems();
+    })
   }
 });
