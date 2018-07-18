@@ -21,9 +21,10 @@ new Vue({
       console.log('appending...');
     },
     onSubmit() {
-      this.loading = true;
-      this.hasSearched = true;
-      this.$http.get('/search/'.concat(this.search))
+      if(this.search) { // if the search term is an empty string, do nothing!
+        this.loading = true;
+        this.hasSearched = true;
+        this.$http.get('/search/'.concat(this.search))
         .then(function(res) {
           this.lastSearch = this.search;
           var items = res.body;
@@ -36,6 +37,7 @@ new Vue({
           this.items = items.slice(0, 10);
           this.loading = false;
         });
+      }
     },
     addItem(idx) {
       var item = this.items[idx];
@@ -56,6 +58,26 @@ new Vue({
         });
       }
       this.total += 10;
+    },
+    getItemTotal(item) {
+      var total = 0;
+      for(var i = 0; i < this.cart.length; i++) {
+        if(this.cart[i].id === item.id) {
+          total = this.cart[i].qty * item.price;
+          break;
+        }
+      }
+      return total;
+    },
+    getItemNumber(item) {
+      var num = 0;
+      for(var i = 0; i < this.cart.length; i++) {
+        if(this.cart[i].id === item.id) {
+          num = this.cart[i].qty
+          break;
+        }
+      }
+      return num;
     },
     getTotal() {
       var total = 0;
